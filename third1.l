@@ -57,18 +57,9 @@ void check(char *str)
 	/* fp points to the file input.txt 
     and opens it in read mode */
     printf("search file %s\n",fileList[currentFile-1]);
-    //while((fscanf(fp, "%s", temp))!=EOF)
     while(fgets(temp,sizeof(temp),fp))
     {
     
-    	
-        /*if(!(strcmp(temp, str)))
-        {
-            printf("FOUND\n");
-            printf("%s\n",temp);
-            flag=1;
-            
-        }*/
         
         if(strstr(temp,str))
         {

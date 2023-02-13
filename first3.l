@@ -1,6 +1,8 @@
 %{
 /*
-* Word recognizer with a symbol table.
+* The definition section, introduces any initial C program code we want
+copied into the final program.
+Lex copies the material between %{ and %} directly to the generated C file.
 */
 # include "y.tab.h" /*token codes from parser */
 
@@ -11,14 +13,17 @@ int state;
 int add_word(int type, char *word);
 int lookup_word(char *word);
 %}
-
-%%
+/*The %% marks the end of this section.*/
+/*The next section is the rules section. Each rule is made up of two parts: a pattern and an
+action, separated by whitespace. The lexer that lex generates will execute the action when
+it recognizes the pattern.*/
+%% 
 \n { state = LOOKUP; } /* end of line, return to default state */
 \.\n {state =LOOKUP;
 	return 0; //end of statement
 	}
 
-^verb { state = VERB; }
+^verb { state = VERB; } /*The caret, ^, at the beginning of the pattern makes the pattern match only at the beginning of an input line*/
 ^adj { state = ADJ; }
 ^adv { state = ADV; }
 ^noun { state = NOUN; }
@@ -34,7 +39,8 @@ int lookup_word(char *word);
 if(state != LOOKUP) {
 /* define the current word */
 add_word(state, yytext);
-} else {
+}
+ else {
 switch(lookup_word(yytext)) {
 case VERB: printf("%s: verb\n", yytext); return VERB;
 case ADJ: printf("%s: adjective\n", yytext); return ADJ;
@@ -81,8 +87,7 @@ wp->word_type = type;
 word_list = wp;
 return 1; /* it worked */
 }
-int
-lookup_word(char *word)
+int lookup_word(char *word)
 {
 struct word *wp = word_list;
 /* search down the list looking for the word */
